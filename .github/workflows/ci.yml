@@ -1,4 +1,4 @@
-name: C Build and Test
+name: C Build
 
 on:
   push:
@@ -11,59 +11,23 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Show directory structure
-      run: |
-        echo "=== Структура проекта ==="
-        ls -la
-        echo "=== Содержимое src ==="
-        ls -la src/ || echo "src directory not found"
-        echo "=== Содержимое include ==="
-        ls -la include/ || echo "include directory not found"
+    - uses: actions/checkout@v4
     
     - name: Build with Make
       run: |
-        echo "=== Компиляция проекта ==="
         make clean
         make
-        echo "=== Результат сборки ==="
-        ls -la build/ || echo "build directory not found"
     
-    - name: Run the program (with test input)
+    - name: Check build output
       run: |
-        echo "=== Запуск программы ==="
-        # Создаем тестовый ввод для всех 10 студентов
-        printf "Иванов И.И.\n2\n8 7 9 8 10\n" > test_input.txt
-        printf "Петров П.П.\n3\n6 7 8 7 9\n" >> test_input.txt
-        printf "Сидоров С.С.\n1\n9 9 8 9 10\n" >> test_input.txt
-        printf "Козлов К.К.\n4\n5 6 5 6 7\n" >> test_input.txt
-        printf "Смирнов С.С.\n2\n7 8 7 8 9\n" >> test_input.txt
-        printf "Васильев В.В.\n3\n8 8 9 8 8\n" >> test_input.txt
-        printf "Федоров Ф.Ф.\n1\n6 6 7 6 8\n" >> test_input.txt
-        printf "Николаев Н.Н.\n5\n9 9 9 9 9\n" >> test_input.txt
-        printf "Алексеев А.А.\n4\n7 7 8 7 8\n" >> test_input.txt
-        printf "Михайлов М.М.\n2\n8 8 8 8 8\n" >> test_input.txt
-        
-        echo "=== Тестовые данные созданы ==="
-        echo "=== Запуск программы с тестовыми данными ==="
-        ./build/labrabota2-3 < test_input.txt || echo "Программа завершилась с ошибкой или ожидает интерактивного ввода"
-        echo "=== Запуск завершен ==="
-    
-    - name: Check Makefile style
-      run: |
-        echo "=== Проверка Makefile ==="
-        if [ -f Makefile ]; then
-          echo "✅ Makefile существует"
-          echo "--- Содержимое Makefile ---"
-          cat Makefile
+        if [ -f build/labrabota2-3 ]; then
+          echo "Build successful"
         else
-          echo "❌ Ошибка: Makefile не найден"
+          echo "Build failed"
           exit 1
         fi
     
-    - name: Upload build artifacts
+    - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: compiled-program
