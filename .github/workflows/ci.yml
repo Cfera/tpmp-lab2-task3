@@ -1,4 +1,4 @@
-name: C Build and Test
+name: C Build
 
 on:
   push:
@@ -11,51 +11,24 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Show directory structure
-      run: |
-        echo "=== Структура проекта ==="
-        ls -la
-        echo "=== Содержимое src ==="
-        ls -la src/
-        echo "=== Содержимое include ==="
-        ls -la include/
+    - uses: actions/checkout@v4
     
     - name: Build with Make
       run: |
-        echo "=== Компиляция проекта ==="
         make clean
         make
-        echo "=== Результат сборки ==="
-        ls -la build/
     
-    - name: Run the program (with test input)
+    - name: Check build output
       run: |
-        echo "=== Запуск программы ==="
-        echo "Тестовый ввод:" > test_input.txt
-        echo "Иванов И.И." >> test_input.txt
-        echo "2" >> test_input.txt
-        echo "8 7 9 8 10" >> test_input.txt
-        echo "Петров П.П." >> test_input.txt
-        echo "3" >> test_input.txt
-        echo "6 7 8 7 9" >> test_input.txt
-        echo "continue" >> test_input.txt
-        echo "=== Программа собрана успешно ==="
-    
-    - name: Check Makefile style
-      run: |
-        echo "=== Проверка Makefile ==="
-        if [ -f Makefile ]; then
-          echo "Makefile существует"
-          cat Makefile
+        if [ -f build/labrabota2-3 ]; then
+          echo "Build successful"
         else
-          echo "Ошибка: Makefile не найден"
+          echo "Build failed"
+          exit 1
         fi
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        path: build/labrabota2-3        name: compiled-program
     
-
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: compiled-program
+        path: build/labrabota2-3
