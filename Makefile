@@ -1,26 +1,40 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99 -Iinclude
+CFLAGS = -Wall -Wextra -Iinclude
 SRCDIR = src
-INCDIR = include
-BUILDDIR = build
-TARGET = $(BUILDDIR)/labrabota2-3
+OBJDIR = obj
+BINDIR = bin
+TARGET = $(BINDIR)/lab2_task3
+
 SOURCES = $(wildcard $(SRCDIR)/*.c)
-OBJECTS = $(patsubst $(SRCDIR)/%.c, $(BUILDDIR)/%.o, $(SOURCES))
+OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SOURCES))
 
 all: $(TARGET)
 
-$(TARGET): $(OBJECTS)
-	mkdir -p $(BUILDDIR)
-	$(CC) $(OBJECTS) -o $@
+$(TARGET): $(OBJECTS) | $(BINDIR)
+	$(CC) $^ -o $@
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.c
-	mkdir -p $(BUILDDIR)
+$(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-clean:
-	rm -rf $(BUILDDIR)
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(BINDIR):
+	mkdir -p $(BINDIR)
 
 run: $(TARGET)
 	./$(TARGET)
 
-.PHONY: all clean run
+clean:
+	rm -rf $(OBJDIR) $(BINDIR)
+
+check:
+	$(MAKE) clean
+	$(MAKE) all
+	$(MAKE) run
+
+distcheck:
+	$(MAKE) clean
+	$(MAKE) all
+	$(MAKE) run
+	$(MAKE) clean

@@ -2,33 +2,26 @@ name: C Build
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ master, development ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v4
-    
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install build essentials
+      run: sudo apt-get update && sudo apt-get install -y build-essential
+
     - name: Build with Make
+      run: make
+
+    - name: Run the program
       run: |
-        make clean
-        make
-    
-    - name: Check build output
-      run: |
-        if [ -f build/labrabota2-3 ]; then
-          echo "Build successful"
-        else
-          echo "Build failed"
-          exit 1
-        fi
-    
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: compiled-program
-        path: build/labrabota2-3
+        echo -e "Ivanov A.\n2\n5 4 5 4 5\nPetrov B.\n1\n3 4 3 4 3\nSidorov C.\n3\n5 5 5 5 5\nKuznetsov D.\n2\n4 4 4 4 4\nSmirnov E.\n1\n2 3 2 3 2\nFedorov F.\n3\n5 4 5 4 5\nMikhailov G.\n2\n3 3 3 3 3\nAlexeev H.\n1\n4 5 4 5 4\nVasiliev I.\n3\n5 5 4 4 5\nNikolaev J.\n2\n4 4 5 5 4" | ./bin/lab2_task3
+
+    - name: Clean build
+      run: make clean

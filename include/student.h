@@ -1,24 +1,17 @@
 #ifndef STUDENT_H
 #define STUDENT_H
-#define MAX_NAME 50
-#define NUM_GRADES 5
-#define NUM_STUDENTS 10
+
+#define GRADES_COUNT 5
+#define NAME_LEN 100
 
 typedef struct {
-    char name[MAX_NAME];
+    char name[NAME_LEN];
     int kurs;
-    int ses[NUM_GRADES];
-    float average;
-} STUDENT;
+    int ses[GRADES_COUNT];
+} Student;
 
-void calculateAverage(STUDENT *student);
-float calculateGroupAverage(STUDENT students[], int count);
-void sortStudentsByName(STUDENT students[], int count);
-void findAboveAverage(STUDENT students[], int count, float groupAverage);
-
-void inputStudent(STUDENT *student);
-void printStudent(const STUDENT *student);
-void printAllStudents(STUDENT students[], int count);
-void clearInputBuffer();
+double calculate_average_score(const Student *s);
+int compare_by_name(const void *a, const void *b);
+void print_student(const Student *s);
 
 #endif
