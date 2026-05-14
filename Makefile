@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude
+CFLAGS = -Wall -Wextra -std=c99 -Iinclude
 SRCDIR = src
 OBJDIR = obj
 BINDIR = bin
@@ -28,13 +28,4 @@ run: $(TARGET)
 clean:
 	rm -rf $(OBJDIR) $(BINDIR)
 
-check:
-	$(MAKE) clean
-	$(MAKE) all
-	$(MAKE) run
-
-distcheck:
-	$(MAKE) clean
-	$(MAKE) all
-	$(MAKE) run
-	$(MAKE) clean
+.PHONY: all clean run
