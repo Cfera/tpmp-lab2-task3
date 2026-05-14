@@ -1,4 +1,5 @@
 #include "array_utils.h"
+#include <stddef.h>
 
 int sum_of_digits(int num) {
     if (num < 0) num = -num;
